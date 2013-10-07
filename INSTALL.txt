@@ -1,0 +1,19 @@
+Linux
+-----
+Tested on Ubuntu 12.04 LTS
+
+Requirements - python3 and python3-serial
+
+python umap.py -P /dev/ttyUSB0 -h
+(must be run as root)
+
+
+Windows
+-------
+Tested on Windows 7
+
+Requirements Python 3 and pyserial-py3k-2.5-rc1.win32.exe
+(currently very slow on Windows)
+
+python umap.py -P 3 -h
+
