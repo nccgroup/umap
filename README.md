@@ -1,6 +1,7 @@
 umap - the USB host security assessment tool 
 
-based on Facedancer by Travis Goodspeed
+Based on Facedancer by Travis Goodspeed:
+http://goodfet.sourceforge.net/hardware/facedancer21/
 
 Released as open source by NCC Group Plc - http://www.nccgroup.com/
 
