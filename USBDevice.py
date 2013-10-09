@@ -402,10 +402,52 @@ class USBDevice:
         return d
 
     def handle_get_hub_descriptor_request(self, num):
-        return b'\x09\x29\x04\xE0\x00\x32\x64\x00\xFF'
+        if self.maxusb_app.testcase[1] == "hub_bLength":
+            bLength = self.maxusb_app.testcase[2]
+        else:
+            bLength = 9
+        if self.maxusb_app.testcase[1] == "hub_bDescriptorType":
+            bDescriptorType = self.maxusb_app.testcase[2]
+        else:
+            bDescriptorType = 0x29
+        if self.maxusb_app.testcase[1] == "hub_bNbrPorts":
+            bNbrPorts = self.maxusb_app.testcase[2]
+        else:
+            bNbrPorts = 4
+        if self.maxusb_app.testcase[1] == "hub_wHubCharacteristics":
+            wHubCharacteristics = self.maxusb_app.testcase[2]
+        else:
+            wHubCharacteristics = 0xe000
+        if self.maxusb_app.testcase[1] == "hub_bPwrOn2PwrGood":
+            bPwrOn2PwrGood = self.maxusb_app.testcase[2]
+        else:
+            bPwrOn2PwrGood = 0x32
+        if self.maxusb_app.testcase[1] == "hub_bHubContrCurrent":
+            bHubContrCurrent = self.maxusb_app.testcase[2]
+        else:
+            bHubContrCurrent = 0x64
+        if self.maxusb_app.testcase[1] == "hub_DeviceRemovable":
+            DeviceRemovable = self.maxusb_app.testcase[2]
+        else:
+            DeviceRemovable = 0
+        if self.maxusb_app.testcase[1] == "hub_PortPwrCtrlMask":
+            PortPwrCtrlMask = self.maxusb_app.testcase[2]
+        else:
+            PortPwrCtrlMask = 0xff
 
+        hub_descriptor = bytes([
+                bLength,                        # length of descriptor in bytes
+                bDescriptorType,                # descriptor type 0x29 == hub
+                bNbrPorts,                      # number of physical ports
+                wHubCharacteristics & 0xff ,    # hub characteristics
+                (wHubCharacteristics >> 8) & 0xff,
+                bPwrOn2PwrGood,                 # time from power on til power good
+                bHubContrCurrent,               # max current required by hub controller
+                DeviceRemovable,
+                PortPwrCtrlMask
+        ])
 
-
+        return hub_descriptor
 
     # USB 2.0 specification, section 9.4.8 (p 285 of pdf)
     def handle_set_descriptor_request(self, req):
