@@ -11,3 +11,14 @@ https://www.github.com/nccgroup/umap
 
 Released under AGPL see LICENSE for more information
 
+## Documentation
+
+https://github.com/nccgroup/umap/wiki/umap-documentation
+
+## Pre-requisites
+
+Python3 and pyserial
+
+## Platforms
+
+Tested on Ubuntu Linux and Windows 7, but there is no reason why it shouldn't work on any platform that satisfies the above pre-requisites
