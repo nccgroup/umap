@@ -26,7 +26,7 @@ from device_class_data import *
 import sys
 import platform
 
-current_version = "1.0"
+current_version = "1.01"
 current_platform = platform.system()
 
 print ("\n---------------------------------------")
