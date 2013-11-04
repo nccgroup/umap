@@ -6,16 +6,16 @@ from serial import Serial, PARITY_NONE
 import time
 from Facedancer import *
 from MAXUSBApp import *
-from USBMassStorage import *
-from USBHub import *
-from USBIphone import *
-from USBAudio import *
-from USBKeyboard import *
-from USBPrinter import *
-from USBImage import *
-from USBCDC import *
-from USBVendorSpecific import *
-from USBSmartcard import *
+from devices.USBMassStorage import *
+from devices.USBHub import *
+from devices.USBIphone import *
+from devices.USBAudio import *
+from devices.USBKeyboard import *
+from devices.USBPrinter import *
+from devices.USBImage import *
+from devices.USBCDC import *
+from devices.USBVendorSpecific import *
+from devices.USBSmartcard import *
 from optparse import OptionParser
 from optparse import OptionGroup
 from collections import namedtuple, defaultdict
@@ -26,7 +26,8 @@ from device_class_data import *
 import sys
 import platform
 
-current_version = "1.01"
+
+current_version = "1.02"
 current_platform = platform.system()
 
 print ("\n---------------------------------------")
@@ -41,6 +42,7 @@ print ("Version:", current_version)
 print ("\nBased on Facedancer by Travis Goodspeed\n")
 print ("For help type: umap.py -h")
 print ("---------------------------------------\n")
+
 
 parser = OptionParser(usage="%prog ", version=current_version)
 group = OptionGroup(parser, "Experimental Options")
@@ -71,6 +73,7 @@ parser.add_option_group(group)
 device_vid = 0x1111
 device_pid = 0x2222
 device_rev = 0x3333
+network_socket = False
 
 if not options.serial:
     print ("Error: Facedancer serial port not supplied\n")
@@ -118,6 +121,7 @@ if options.updatedb:
         print ("Finished")
     except:
         print ("Error: Unable to contact server")
+
 
 if options.vid:
     try:
@@ -948,6 +952,7 @@ if options.device:
 
     list_classes(devicetmp)
 
+
     if dev == 1:
         connect_as_audio (device_vid, device_pid, device_rev, 3)
     elif dev == 2:
@@ -957,7 +962,7 @@ if options.device:
     elif dev == 6:
         connect_as_image (device_vid, device_pid, device_rev, 2)   
     elif dev == 7:
-        connect_as_printer (device_vid, device_pid, device_rev, 3)
+        connect_as_printer (device_vid, device_pid, device_rev, 0)
     elif dev == 8:
         connect_as_mass_storage (device_vid, device_pid, device_rev, 3)
     elif dev == 9:
