@@ -1,0 +1,8 @@
+v1.01
+----- 
+fixed problem with hub class fuzzing
+
+v1.02
+-----
+printing a document from the host to the virtual USB printer now produces a PCL file
+tidied up directory structure and removed legacy Facedancer files
