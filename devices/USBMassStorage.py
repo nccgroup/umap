@@ -99,14 +99,24 @@ class USBMassStorageInterface(USBInterface):
                 self.maxusb_app.fplog.write (" **SUPPORTED**\n")
             self.maxusb_app.stop = True
 
-
         cbw = CommandBlockWrapper(data)
         opcode = cbw.cb[0]
-
         status = 0              # default to success
         response = None         # with no response data
 
-        if self.is_write_in_progress:
+        if self.maxusb_app.server_running == True:
+            try:
+                self.maxusb_app.netserver_from_endpoint_sd.send(data)
+            except:
+                print ("Error: No network client connected")
+
+            while True:
+                if len(self.maxusb_app.reply_buffer) > 0:
+                    self.maxusb_app.send_on_endpoint(3, self.maxusb_app.reply_buffer)
+                    self.maxusb_app.reply_buffer = ""
+                    break
+
+        elif self.is_write_in_progress:
             if self.verbose > 0:
                 print(self.name, "got", len(data), "bytes of SCSI write data")
 
@@ -424,12 +434,13 @@ class USBMassStorageInterface(USBInterface):
             if cbw.data_transfer_length > 0:
                 response = bytes([0] * cbw.data_transfer_length)
 
-        if response:
+        if response and self.maxusb_app.server_running == False:
             if self.verbose > 2:
                 print(self.name, "responding with", len(response), "bytes:",
                         bytes_as_hex(response))
 
             self.configuration.device.maxusb_app.send_on_endpoint(3, response)
+
 
         csw = bytes([
             ord('U'), ord('S'), ord('B'), ord('S'),
@@ -441,6 +452,7 @@ class USBMassStorageInterface(USBInterface):
         if self.verbose > 3:
             print(self.name, "responding with status =", status)
 
+#        if self.maxusb_app.server_running == False:
         self.configuration.device.maxusb_app.send_on_endpoint(3, csw)
 
 

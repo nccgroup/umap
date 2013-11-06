@@ -6,3 +6,7 @@ v1.02
 -----
 printing a document from the host to the virtual USB printer now produces a PCL file
 tidied up directory structure and removed legacy Facedancer files
+
+v1.03
+-----
+Added network functionality to connect directly to USB endpoints via a TCP socket

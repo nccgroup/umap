@@ -6,6 +6,7 @@ from serial import Serial, PARITY_NONE
 import time
 from Facedancer import *
 from MAXUSBApp import *
+from devices.networking import *
 from devices.USBMassStorage import *
 from devices.USBHub import *
 from devices.USBIphone import *
@@ -27,7 +28,7 @@ import sys
 import platform
 
 
-current_version = "1.02"
+current_version = "1.03"
 current_platform = platform.system()
 
 print ("\n---------------------------------------")
@@ -53,6 +54,7 @@ parser.add_option("-i", action="store_true", dest="identify", default=False, hel
 parser.add_option("-c", dest="cls", help="identify if a specific class on the connected host is supported (CLS=class:subclass:proto)")
 parser.add_option("-O", action="store_true", dest="osid", default=False, help="Operating system identification")
 parser.add_option("-e", dest="device", help="emulate a specific device (DEVICE=class:subclass:proto)")
+parser.add_option("-n", action="store_true", dest="netsocket", default=False, help="Start network server connected to the bulk endpoints (TCP port 2001)")
 parser.add_option("-v", dest="vid", help="specify Vendor ID (hex format e.g. 1a2b)")
 parser.add_option("-p", dest="pid", help="specify Product ID (hex format e.g. 1a2b)")
 parser.add_option("-r", dest="rev", help="specify product Revision (hex format e.g. 1a2b)")
@@ -113,6 +115,8 @@ if options.log:
     fplog.write ("\nBased on Facedancer by Travis Goodspeed\n")
     fplog.write ("---------------------------------------\n")
 
+if options.netsocket:
+    network_socket = True
 
 if options.updatedb:
     print ("Downloading latest VID/PID database...")
@@ -285,6 +289,12 @@ def connect_as_image (vid, pid, rev, mode):
     if options.log:
         logfp = fplog
     u = MAXUSBApp(fd, logfp, mode, fake_testcase, verbose=ver1)
+
+    if network_socket == True:
+        netserver(u, 2001).start()
+        u.server_running = True
+        input("Network socket listening on TCP port 2001 - Press Enter to continue with device emulation...")
+
     d = USBImageDevice(u, vid, pid, rev, 6, 1, 1, "ncc_group_logo.jpg", verbose=ver2)
     d.connect()
     try:
@@ -392,6 +402,8 @@ def connect_as_printer (vid, pid, rev, mode):
 
 
 def connect_as_keyboard (vid, pid, rev, mode):
+    print ("network socket=")
+    print (network_socket)
     if mode == 1:
         ver1 = 0
         ver2 = 0
@@ -416,6 +428,7 @@ def connect_as_keyboard (vid, pid, rev, mode):
 
 
 def connect_as_smartcard (vid, pid, rev, mode):
+
     if mode == 1:
         ver1 = 0
         ver2 = 0
@@ -429,6 +442,12 @@ def connect_as_smartcard (vid, pid, rev, mode):
     if options.log:
         logfp = fplog
     u = MAXUSBApp(fd, logfp, mode, fake_testcase, verbose=ver1)
+
+    if network_socket == True:
+        netserver(u, 2001).start()
+        u.server_running = True
+        input("Network socket listening on TCP port 2001 - Press Enter to continue with device emulation...")
+
     d = USBSmartcardDevice(u, vid, pid, rev, verbose=ver2)
     d.connect()
     try:
@@ -502,6 +521,12 @@ def connect_as_mass_storage (vid, pid, rev, mode):
     if options.log:
         logfp = fplog
     u = MAXUSBApp(fd, logfp, mode, fake_testcase, verbose=ver1)
+
+    if network_socket == True:
+        netserver(u, 2001).start()
+        u.server_running = True
+        input("Network socket listening on TCP port 2001 - Press Enter to continue with device emulation...")
+
     try:
         d = USBMassStorageDevice(u, vid, pid, rev, 8, 6, 80, "stick.img", verbose=ver2)
         d.connect()

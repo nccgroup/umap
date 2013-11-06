@@ -111,6 +111,15 @@ class USBDevice:
 
     def disconnect(self):
         self.maxusb_app.disconnect()
+        self.maxusb_app.server_running = False
+
+        if self.maxusb_app.netserver_to_endpoint_sd:
+            self.maxusb_app.netserver_to_endpoint_sd.close()
+
+        if self.maxusb_app.netserver_from_endpoint_sd:
+            self.maxusb_app.netserver_from_endpoint_sd.close()
+
+
 
         self.state = USB.state_detached
 

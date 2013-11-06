@@ -56,6 +56,10 @@ class MAXUSBApp(FacedancerApp):
         self.connected_device = None
 
         self.mode = mode
+        self.netserver_to_endpoint_sd = 0
+        self.netserver_from_endpoint_sd = 0
+        self.server_running = False
+        self.reply_buffer = ""
         self.testcase = testcase
 
         self.fplog = 0
@@ -92,7 +96,7 @@ class MAXUSBApp(FacedancerApp):
             self.write_register_cmd.data[0] |= 1
 
         self.device.writecmd(self.read_register_cmd)
-
+    
         resp = self.device.readcmd()
 
         if self.verbose > 2:
@@ -138,6 +142,7 @@ class MAXUSBApp(FacedancerApp):
         if self.verbose > 0:
             print(self.app_name, "disconnected device", self.connected_device.name)
         self.connected_device = None
+
 
     def clear_irq_bit(self, reg, bit):
         self.write_register(reg, bit)

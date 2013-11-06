@@ -157,7 +157,20 @@ class USBImageInterface(USBInterface):
         response = None         # with no response data
         response2 = None
 
-        if opcode == 0x1002:      # OpenSession
+        if self.maxusb_app.server_running == True:
+            try:
+                self.maxusb_app.netserver_from_endpoint_sd.send(data)
+            except:
+                print ("Error: No network client connected")
+            while True:
+                if len(self.maxusb_app.reply_buffer) > 0:
+                    self.maxusb_app.send_on_endpoint(2, self.maxusb_app.reply_buffer)
+                    self.maxusb_app.reply_buffer = ""
+                    break
+
+
+
+        elif opcode == 0x1002:      # OpenSession
             if self.verbose > 0:
                 print(self.name, "got OpenSession")
 
@@ -166,7 +179,7 @@ class USBImageInterface(USBInterface):
 
 
 
-        if opcode == 0x1016:      # SetDevicePropValue
+        elif opcode == 0x1016:      # SetDevicePropValue
             if self.verbose > 0:
                 print(self.name, "got SetDevicePropValue")
 
@@ -175,7 +188,7 @@ class USBImageInterface(USBInterface):
 
 
 
-        if opcode == 0x100a:      # GetThumb
+        elif opcode == 0x100a:      # GetThumb
             if self.verbose > 0:
                 print(self.name, "got GetThumb")
             thumb_data = (self.thumb_image.read_data())
@@ -216,7 +229,7 @@ class USBImageInterface(USBInterface):
 
 
 
-        if opcode == 0x101b:      # GetPartialObject
+        elif opcode == 0x101b:      # GetPartialObject
             if self.verbose > 0:
                 print(self.name, "got GetPartialObject")
 
@@ -782,7 +795,7 @@ class USBImageInterface(USBInterface):
             response2 = self.create_send_ok(transaction_id)
 
 
-        if response:
+        if response and self.maxusb_app.server_running == False:
             if self.verbose > 2:
                 print(self.name, "responding with", len(response), "bytes:",
                         bytes_as_hex(response))
@@ -790,12 +803,13 @@ class USBImageInterface(USBInterface):
             self.configuration.device.maxusb_app.send_on_endpoint(2, response)
 
 
-        if response2:
+        if response2 and self.maxusb_app.server_running == False:
             if self.verbose > 2:
                 print(self.name, "responding with", len(response2), "bytes:",
                         bytes_as_hex(response2))
 
             self.configuration.device.maxusb_app.send_on_endpoint(2, response2)
+
 
 
 

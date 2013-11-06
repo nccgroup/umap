@@ -214,6 +214,7 @@ class USBSmartcardInterface(USBInterface):
 
     def handle_data_available(self,data):
 
+
         if self.maxusb_app.mode == 1:
             print (" **SUPPORTED**",end="")
             if self.maxusb_app.fplog:
@@ -228,7 +229,20 @@ class USBSmartcardInterface(USBInterface):
         bReserved = ord(data[7:8])
 #        print ("bReserved=",bReserved) 
 
-        if command == 0x61: # PC_to_RDR_SetParameters
+        if self.maxusb_app.server_running == True:
+            try:
+                self.maxusb_app.netserver_from_endpoint_sd.send(data)
+            except:
+                print ("Error: No network client connected")
+
+            while True:
+                if len(self.maxusb_app.reply_buffer) > 0:
+                    self.maxusb_app.send_on_endpoint(2, self.maxusb_app.reply_buffer)
+                    self.maxusb_app.reply_buffer = ""
+                    break
+
+
+        elif command == 0x61: # PC_to_RDR_SetParameters
 
             if self.maxusb_app.testcase[1] == "SetParameters_bMessageType":
                 bMessageType = self.maxusb_app.testcase[2]
@@ -496,7 +510,8 @@ class USBSmartcardInterface(USBInterface):
             print ("Received Smartcard command not understood") 
             response = b''
 
-        self.configuration.device.maxusb_app.send_on_endpoint(2, response)
+        if self.maxusb_app.server_running == False:
+            self.configuration.device.maxusb_app.send_on_endpoint(2, response)
 
 
     def handle_buffer_available(self):
