@@ -18,7 +18,7 @@ testcases_class_independent = [
 ["Configuration_bLength_null","conf_bLength",0],
 ["Configuration_bLength_lower","conf_bLength",1],
 ["Configuration_bLength_higher","conf_bLength",10],
-["Configuration_bLength_max","conf_bLength",10],
+["Configuration_bLength_max","conf_bLength",0xff],
 ["Configuration_bDescriptorType_null","conf_bDescriptorType",0],
 ["Configuration_bDescriptorType_invalid","conf_bDescriptorType",0xff],
 ["Configuration_wTotalLength_null","conf_wTotalLength",0],
