@@ -49,7 +49,7 @@ testcases_class_independent = [
 ["Endpoint_bEndpointAddress_null","end_bEndpointAddress",0],
 ["Endpoint_bEndpointAddress_max","end_bEndpointAddress",0xff],
 ["Endpoint_wMaxPacketSize_null","end_wMaxPacketSize",0],
-["Endpoint_wMaxPacketSize_max","end_wMaxPacketSize",0xff],
+["Endpoint_wMaxPacketSize_max","end_wMaxPacketSize",0xffff],
 ]
 
 # PIMA 15740
