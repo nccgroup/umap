@@ -403,8 +403,7 @@ def connect_as_printer (vid, pid, rev, mode):
 
 
 def connect_as_keyboard (vid, pid, rev, mode):
-    print ("network socket=")
-    print (network_socket)
+    print ("network socket=%s" % network_socket)
     if mode == 1:
         ver1 = 0
         ver2 = 0
@@ -615,6 +614,17 @@ def list_classes (devices_list):
         x+=1
 
 
+def get_start_fuzzcase (start_fuzzcase, testcases):
+    if start_fuzzcase:
+        if start_fuzzcase < len (testcases):
+            return start_fuzzcase
+        else:
+            print ("Error: Invalid fuzzcase - starting from zero")
+            if options.log:
+                fplog.write ("Error: Invalid fuzzcase - starting from zero\n")
+    return 0
+
+
 if options.listclasses:
     print ("XX:YY:ZZ - XX = Class : YY = Subclass : ZZ = Protocol")
     list_classes(supported_devices)
@@ -718,16 +728,7 @@ if options.fuzzc:
             fplog.write ("Enumeration phase...\n")
 
         current_serial_port = 0
-        x = 0
-        if start_fuzzcase:
-            if start_fuzzcase < len (testcases_class_independent):
-                x = start_fuzzcase
-            else:
-                print ("Error: Invalid fuzzcase - starting from zero")
-                if options.log:
-                    fplog.write ("Error: Invalid fuzzcase - starting from zero\n")
-        else:
-            x = 0
+        x = get_start_fuzzcase (start_fuzzcase, testcases_class_independent)
         while (x < len (testcases_class_independent)):
             timestamp = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime())
             print (timestamp, end="")
@@ -753,16 +754,7 @@ if options.fuzzc:
             fplog.write ("Class-specific data...\n")
         if usbclass == 3:   #HID
 
-            x = 0
-            if start_fuzzcase:
-                if start_fuzzcase < len (testcases_hid_class):
-                    x = start_fuzzcase
-                else:
-                    print ("Error: Invalid fuzzcase - starting from zero")
-                    if options.log:
-                        fplog.write ("Error: Invalid fuzzcase - starting from zero\n")
-            else:
-                x = 0
+            x = get_start_fuzzcase (start_fuzzcase, testcases_hid_class)
             while (x < len (testcases_hid_class)):
                 timestamp = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime())
                 print (timestamp, end="")
@@ -777,16 +769,7 @@ if options.fuzzc:
                 x+=1
 
         elif usbclass == 6:   #Image
-            x = 0
-            if start_fuzzcase:
-                if start_fuzzcase < len (testcases_image_class):
-                    x = start_fuzzcase
-                else:
-                    print ("Error: Invalid fuzzcase - starting from zero")
-                    if options.log:
-                        fplog.write ("Error: Invalid fuzzcase - starting from zero\n")
-            else:
-                x = 0
+            x = get_start_fuzzcase (start_fuzzcase, testcases_image_class)
             while (x < len (testcases_image_class)):
                 timestamp = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime())
                 print (timestamp, end="")
@@ -801,16 +784,7 @@ if options.fuzzc:
                 x+=1
 
         elif usbclass == 7:   #Printer
-            x = 0
-            if start_fuzzcase:
-                if start_fuzzcase < len (testcases_printer_class):
-                    x = start_fuzzcase
-                else:
-                    print ("Error: Invalid fuzzcase - starting from zero")
-                    if options.log:
-                        fplog.write ("Error: Invalid fuzzcase - starting from zero\n")
-            else:
-                x = 0
+            x = get_start_fuzzcase (start_fuzzcase, testcases_printer_class)
             while (x < len (testcases_printer_class)):
                 timestamp = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime())
                 print (timestamp, end="")
@@ -825,16 +799,7 @@ if options.fuzzc:
                 x+=1
 
         elif usbclass == 1:   #Audio
-            x = 0
-            if start_fuzzcase:
-                if start_fuzzcase < len (testcases_audio_class):
-                    x = start_fuzzcase
-                else:
-                    print ("Error: Invalid fuzzcase - starting from zero")
-                    if options.log:
-                        fplog.write ("Error: Invalid fuzzcase - starting from zero\n")
-            else:
-                x = 0
+            x = get_start_fuzzcase (start_fuzzcase, testcases_audio_class)
             while (x < len (testcases_audio_class)):
                 timestamp = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime())
                 print (timestamp, end="")
@@ -849,16 +814,7 @@ if options.fuzzc:
                 x+=1
 
         elif usbclass == 8:   #Mass Storage
-            x = 0
-            if start_fuzzcase:
-                if start_fuzzcase < len (testcases_mass_storage_class):
-                    x = start_fuzzcase
-                else:
-                    print ("Error: Invalid fuzzcase - starting from zero")
-                    if options.log:
-                        fplog.write ("Error: Invalid fuzzcase - starting from zero\n")
-            else:
-                x = 0
+            x = get_start_fuzzcase (start_fuzzcase, testcases_mass_storage_class)
             while (x < len (testcases_mass_storage_class)):
                 timestamp = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime())
                 print (timestamp, end="")
@@ -873,16 +829,7 @@ if options.fuzzc:
                 x+=1
 
         elif usbclass == 9:   #Hub
-            x = 0
-            if start_fuzzcase:
-                if start_fuzzcase < len (testcases_hub_class):
-                    x = start_fuzzcase
-                else:
-                    print ("Error: Invalid fuzzcase - starting from zero")
-                    if options.log:
-                        fplog.write ("Error: Invalid fuzzcase - starting from zero\n")
-            else:
-                x = 0
+            x = get_start_fuzzcase (start_fuzzcase, testcases_hub_class)
             while (x < len (testcases_hub_class)):
                 timestamp = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime())
                 print (timestamp, end="")
@@ -897,16 +844,7 @@ if options.fuzzc:
                 x+=1
 
         elif usbclass == 11:   #Smartcard
-            x = 0
-            if start_fuzzcase:
-                if start_fuzzcase < len (testcases_smartcard_class):
-                    x = start_fuzzcase
-                else:
-                    print ("Error: Invalid fuzzcase - starting from zero")
-                    if options.log:
-                        fplog.write ("Error: Invalid fuzzcase - starting from zero\n")
-            else:
-                x = 0
+            x = get_start_fuzzcase (start_fuzzcase, testcases_smartcard_class)
             while (x < len (testcases_smartcard_class)):
                 timestamp = time.strftime("%Y/%m/%d %H:%M:%S", time.localtime())
                 print (timestamp, end="")
