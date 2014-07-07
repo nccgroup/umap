@@ -1,0 +1,44 @@
+[
+{ "match-names" : ["Apple iPad", "Apple iPhone", "Apple Mac OSX"],
+    "matches" : [
+        { "match-type" : "match-freq", "match-text" : "SetFea", "match-condition" : "__ge__", "match-value" : 1 }
+    ]
+},
+{ "match-names" : ["Generic Linux"],
+    "matches" : [
+        { "match-type" : "match-freq", "match-text" : "GetDes:6:0", "match-condition" : "__ge__", "match-value" : 1 }
+        { "match-type" : "match-freq", "match-text" : "GetDes:3:4", "match-condition" : "__ge__", "match-value" : 1 }
+    ]
+},
+{ "match-names" : ["Microsoft Windows 8"],
+    "matches" : [
+        { "match-type" : "match-freq", "match-text" : "GetDes:3:3", "match-condition" : "__eq__", "match-value" : 2 }
+    ]
+},
+{ "match-names" : ["Sony Playstation 3"],
+    "matches" : [
+        { "match-type" : "match-freq", "match-text" : "GetDes:1:0", "match-condition" : "__eq__", "match-value" : 2 },
+        { "match-type" : "match-freq", "match-text" : "GetDes:2:0", "match-condition" : "__eq__", "match-value" : 2 },
+        { "match-type" : "match-count", "match-condition" : "__eq__", "match-value" : 5 }
+    ]
+},
+{ "match-names" : ["Ubuntu Linux"],
+    "matches" : [
+        { "match-type" : "match-freq", "match-text" : "SetInt", "match-condition" : "__eq__", "match-value" : 2 }
+    ]
+},
+{ "match-names" : ["Brother ADS-2600W scanner"],
+    "matches" : [
+        { "match-type" : "match-freq", "match-text" : "GetDes:1:0", "match-condition" : "__eq__", "match-value" : 2},
+        { "match-type" : "match-freq", "match-text" : "GetDes:2:0", "match-condition" : "__eq__", "match-value" : 4},
+        { "match-type" : "match-count", "match-condition" : "__eq__", "match-value" : 8 }
+    ]
+},
+{ "match-names" : ["AMI BIOS"],
+    "matches" : [
+        { "match-type" : "match-pos", "match-text" : "GetDes:1:0", "match-condition" : "__eq__", "match-value" : 0},
+        { "match-type" : "match-pos", "match-text" : "GetDes:1:0", "match-condition" : "__eq__", "match-value" : 1},
+        { "match-type" : "match-pos", "match-text" : "GetDes:2:0", "match-condition" : "__eq__", "match-value" : 2}
+    ]
+}
+]

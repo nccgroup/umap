@@ -26,6 +26,7 @@ from testcases import *
 from device_class_data import *
 import sys
 import platform
+import json
 
 
 current_version = "1.03"
@@ -1001,6 +1002,13 @@ if options.device:
 
 if options.osid:
 
+    # --- Read fingerprint file ---
+    fingerprintfile = './umap-device-fingerprints.json'
+    print ("Reading fingerprints from %s" % fingerprintfile)
+    fpfile = open (fingerprintfile, 'r')
+    fingerprints = json.load(fpfile)
+    print ("Read %d fingerprints." % len(fingerprints))
+
     print ("Fingerprinting the connected host - please wait...")
 
     try:
@@ -1018,6 +1026,7 @@ if options.osid:
     except:
         rev = 0x3333
 
+    # --- Attempt fingerprint ---
 #    sp = connectserial()
     fake_testcase = ["dummy","",0]
     fd = Facedancer(sp, verbose=0)
@@ -1034,36 +1043,45 @@ if options.osid:
         if options.log:
             fplog.close()
 
-    matching1 = [s for s in u.fingerprint if "GetDes:1:0" in s]
-    matching2 = [s for s in u.fingerprint if "GetDes:2:0" in s]
+    # --- Try to match fingerprint responses ---
+    matchedfingerprints = []
+    for fingerprint in fingerprints:
 
-    if len(matching1) == 2 and len(matching2) == 2 and len(u.fingerprint) == 5:
-        print ("\nOS Matches: Sony Playstation 3\n")
-        sys.exit()
+        # --- Perform each match in the fingerprint ---
+        numfpmatched = 0
+        for match in fingerprint['matches']:
 
-    if any("SetFea" in s for s in u.fingerprint):
-        print ("\nOS Matches: Apple iPad/iPhone\n")
-        sys.exit()
-    
-    matching = [s for s in u.fingerprint if "SetInt" in s]
-    if len(matching) == 2:
-        print ("\nOS Matches: Ubuntu Linux\n")
-        sys.exit()
+            # --- If match is on the count of a particular item ---
+            if match['match-type'] == 'match-freq':
+                if getattr(u.fingerprint.count("Dev:" + match['match-text']),match['match-condition'])(int(match['match-value'])):
+                   numfpmatched += 1
 
-    if any("GetDes:3:4" in s for s in u.fingerprint):
-        print ("\nOS Matches: Chrome OS\n")
-        sys.exit()
+            # --- If match is on the number of items ---
+            elif match['match-type'] == 'match-count':
+                if getattr(len(u.fingerprint),match['match-condition'])(int(match['match-value'])):
+                    numfpmatched += 1
 
-    matching = [s for s in u.fingerprint if "GetDes:3:3" in s]
-    if len(matching) == 2:
-        print ("\nOS Matches: Microsoft Windows 8\n")
-        sys.exit()
+            # --- If match is on a single item in a particular position ---
+            elif match['match-type'] == 'match-pos':
+                if getattr("Dev:" + match['match-text'],match['match-condition'])(u.fingerprint[int(match['match-value'])]):
+                    numfpmatched += 1
 
-    print ("\nUnknown OS - Fingerprint:")
-    print (u.fingerprint) 
+            else:
+                print ("Unknown match type: %s" % match['match-type'])
+                next
 
+        # --- If fingerprint succeeded ---
+        if numfpmatched == len(fingerprint['matches']):
+            matchedfingerprints.extend(fingerprint['match-names'])
+
+    # --- Tell the user which fingerprints matched ---
+    if matchedfingerprints:
+        print ("\nFingerprint matches:")
+        for matchedfingerprint in matchedfingerprints:
+            print (matchedfingerprint)
+    else:
+        print ("\nUnknown OS - Fingerprint:")
+        print (u.fingerprint)
 
 if options.log:
     fplog.close()
-
-
