@@ -403,7 +403,7 @@ def connect_as_printer (vid, pid, rev, mode):
 
 
 def connect_as_keyboard (vid, pid, rev, mode):
-    print ("network socket=%s" % network_socket)
+    print ("network socket={0}".format(network_socket))
     if mode == 1:
         ver1 = 0
         ver2 = 0
