@@ -6,7 +6,7 @@
 },
 { "match-names" : ["Generic Linux"],
     "matches" : [
-        { "match-type" : "match-freq", "match-text" : "GetDes:6:0", "match-condition" : "__ge__", "match-value" : 1 }
+        { "match-type" : "match-freq", "match-text" : "GetDes:6:0", "match-condition" : "__ge__", "match-value" : 1 },
         { "match-type" : "match-freq", "match-text" : "GetDes:3:4", "match-condition" : "__ge__", "match-value" : 1 }
     ]
 },
